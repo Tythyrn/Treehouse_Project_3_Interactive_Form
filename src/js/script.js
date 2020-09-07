@@ -2,19 +2,56 @@
 Treehouse Techdegree:
 FSJS Project 3 - Interactive Form
 */
+const form = document.getElementsByTagName('form')[0];
 const titleSelector = document.getElementById('title');
 const otherTitleTextBox = document.getElementById('other-title');
 const nameTextBox = document.getElementById('name');
+const emailTextBox = document.getElementById('mail');
 const designSelector = document.getElementById('design');
 const colorDiv = document.getElementById('shirt-colors');
 const colorSelectorOptions = document.getElementById('color').children;
 const activities = document.querySelector('.activities');
+const activitiesTitle = activities.firstElementChild;
 const activityCheckboxes = document.querySelectorAll('.activities input');
 const total = document.querySelector('[data-total]');
 const paymentSelector = document.getElementById('payment');
 const creditCardDiv = document.getElementById('credit-card');
 const paypalDiv = document.getElementById('paypal');
 const bitcoinDiv = document.getElementById('bitcoin');
+const submitButton = document.querySelector('[type=submit]');;
+
+//This function validates if the name field is empty or not.  Learned from FSJS Form Input Validation Warm up
+const nameValidator = () => {
+    const nameValue = nameTextBox.value;
+
+    if (nameValue.length > 0) {
+        nameTextBox.style.borderColor = 'rgb(111, 157, 220)';
+        return true;
+    } else {
+        nameTextBox.style.borderColor = 'rgb(255, 0, 0)';
+        return false;
+    }
+}
+nameTextBox.addEventListener('blur', nameValidator);
+nameTextBox.addEventListener('keyup', nameValidator);
+
+//This function validates if email has characters before and after the '@' symbol.  Learned from FSJS Form Input Validation Warm up
+const emailValidator = () => {
+
+    const emailValue = emailTextBox.value;
+    const atIndex = emailValue.indexOf('@');
+    const periodIndex = emailValue.lastIndexOf('.');
+
+    if (atIndex > 1 && periodIndex > (atIndex + 1)){
+        emailTextBox.style.borderColor = 'rgb(111, 157, 220)';
+        return true;
+    } else {
+        emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
+        return false;
+    } 
+}
+emailTextBox.addEventListener('blur', emailValidator);
+emailTextBox.addEventListener('keyup', emailValidator);
 
 //This event listener shows or hides the other title textbox if 'other' is selected in the dropdown
 titleSelector.addEventListener('change', (e) => {
@@ -82,6 +119,24 @@ activities.addEventListener('change', (e) => {
     }
 });
 
+//This function checks how many activities were selected then returns false and colors the legend red if none were selected.
+const activitiesValidator = () => {
+    let numChecked = 0;
+    for (let i = 0; i < activityCheckboxes.length; i++ ) {
+        if (activityCheckboxes[i].checked) {
+            numChecked += 1;
+        }
+    }
+
+    if (numChecked > 0) {
+        activitiesTitle.style.color = 'rgba(6, 49, 68, 0.9)';
+        return true;
+    } else {
+        activitiesTitle.style.color = 'rgb(255, 0, 0)';
+        return false;
+    }
+}
+
 paymentSelector.addEventListener('change', (e) => {
     const paymentType = e.target.value;
 
@@ -97,6 +152,18 @@ paymentSelector.addEventListener('change', (e) => {
         creditCardDiv.style.display = 'none';
         paypalDiv.style.display = 'none';
         bitcoinDiv.style.display = '';
+    }
+});
+
+form.addEventListener('submit', (e) => {
+    if(!nameValidator()) {
+        e.preventDefault();
+    }
+    if(!emailValidator()) {
+        e.preventDefault();
+    }
+    if(!activitiesValidator()) {
+        e.preventDefault();
     }
 });
 
