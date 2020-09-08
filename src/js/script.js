@@ -26,15 +26,19 @@ const submitButton = document.querySelector('[type=submit]');;
 //This function validates if the name field is empty or not.  Learned from FSJS Form Input Validation Warm up
 const nameValidator = () => {
     const nameValue = nameTextBox.value;
+    const nameError = document.getElementById('error-name');
 
     if (nameValue.length > 0) {
         nameTextBox.style.borderColor = 'rgb(111, 157, 220)';
+        nameError.innerHTML = '';
         return true;
     } else {
         nameTextBox.style.borderColor = 'rgb(255, 0, 0)';
+        nameError.innerHTML = "Please Enter Your Name";
         return false;
     }
 }
+nameTextBox.addEventListener('blur', nameValidator);
 nameTextBox.addEventListener('keyup', nameValidator);
 
 //This function validates if email has characters before and after the '@' symbol.  Learned from FSJS Form Input Validation Warm up
@@ -42,17 +46,39 @@ const emailValidator = () => {
 
     const emailValue = emailTextBox.value;
     const atIndex = emailValue.indexOf('@');
+    console.log(atIndex);
     const periodIndex = emailValue.lastIndexOf('.');
+    const emailError = document.getElementById('error-email');
 
+    //Updates error message depending on what is currently entered into the email field
     if (atIndex > 1 && periodIndex > (atIndex + 1)){
         emailTextBox.style.borderColor = 'rgb(111, 157, 220)';
+        emailError.innerHTML = '';
         return true;
+    } else if (atIndex === -1){
+        emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
+        emailError.innerHTML = "Email must contain '@'";
+        return false;
+    }else if (atIndex <= 1){
+        emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
+        emailError.innerHTML = "Must enter more characters before '@'";
+        return false;
+    } else if (periodIndex === -1){
+        emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
+        emailError.innerHTML = "Email must contain '.'";
+        return false;
+    }else if (atIndex > 1 && periodIndex <= (atIndex + 1)){
+        emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
+        emailError.innerHTML = "Must enter more characters before '.'";
+        return false;
     } else {
         emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
+        emailError.innerHTML = "Please enter a valid email";
         return false;
-    } 
+    }
 }
 emailTextBox.addEventListener('keyup', emailValidator);
+emailTextBox.addEventListener('blur', emailValidator);
 
 //This event listener shows or hides the other title textbox if 'other' is selected in the dropdown
 titleSelector.addEventListener('change', (e) => {
@@ -111,10 +137,10 @@ activities.addEventListener('change', (e) => {
 
             if(clicked.checked) {
                 activityCheckboxes[i].disabled = true;
-                activityCheckboxes[i].parentNode.classList.add('grey-out')
+                activityCheckboxes[i].parentNode.classList.add('grey-out');
             } else {
                 activityCheckboxes[i].disabled = false;
-                activityCheckboxes[i].parentNode.classList.remove('grey-out')
+                activityCheckboxes[i].parentNode.classList.remove('grey-out');
             }
         }
     }
@@ -123,6 +149,7 @@ activities.addEventListener('change', (e) => {
 //This function checks how many activities were selected then returns false and colors the legend red if none were selected.
 const activitiesValidator = () => {
     let numChecked = 0;
+    const activityError = document.getElementById('error-activity');
     for (let i = 0; i < activityCheckboxes.length; i++ ) {
         if (activityCheckboxes[i].checked) {
             numChecked += 1;
@@ -131,13 +158,16 @@ const activitiesValidator = () => {
 
     if (numChecked > 0) {
         activitiesTitle.style.color = 'rgba(6, 49, 68, 0.9)';
+        activityError.innerHTML = '';
         return true;
     } else {
         activitiesTitle.style.color = 'rgb(255, 0, 0)';
+        activityError.innerHTML = 'Please select at least one activity';
         return false;
     }
 }
 
+//this function shows the payment section depending on which payment type was chosen
 paymentSelector.addEventListener('change', (e) => {
     const paymentType = e.target.value;
 
@@ -160,13 +190,16 @@ paymentSelector.addEventListener('change', (e) => {
 const creditCardNumValidator = () => {
     const numbers = /^[0-9]+$/g;
     let value = creditCardField.value;
+    const creditCardError = document.getElementById('error-card-number');
 
     if(value.match(numbers) || value === ''){
         if(value.length >= 13 && value.length <= 16){
-            creditCardField.style.borderColor = 'rgb(111, 157, 220)'
+            creditCardField.style.borderColor = 'rgb(111, 157, 220)';
+            creditCardError.innerHTML = '';
             return true;
         } else {
             creditCardField.style.borderColor = 'rgb(255, 0, 0)';
+            creditCardError.innerHTML = 'Please enter a number 13 to 16 numbers long';
             return false;
         }
     } else {
@@ -174,18 +207,22 @@ const creditCardNumValidator = () => {
     }
 }
 creditCardField.addEventListener('keyup', creditCardNumValidator);
+creditCardField.addEventListener('blur', creditCardNumValidator);
 
 //This function validates if zipcode field has 5 numbers
 const zipNumValidator = () => {
     const numbers = /^[0-9]+$/g;
     let value = zipField.value;
+    const zipError = document.getElementById('error-zip');
 
     if(value.match(numbers) || value === ''){
         if(value.length === 5){
-            zipField.style.borderColor = 'rgb(111, 157, 220)'
+            zipField.style.borderColor = 'rgb(111, 157, 220)';
+            zipError.innerHTML = '';
             return true;
         } else {
             zipField.style.borderColor = 'rgb(255, 0, 0)';
+            zipError.innerHTML = 'Please enter a 5 digit zip code';
             return false;
         }
     } else {
@@ -193,18 +230,22 @@ const zipNumValidator = () => {
     }
 }
 zipField.addEventListener('keyup', zipNumValidator);
+zipField.addEventListener('blur', zipNumValidator);
 
 //This function validates if cvv field has 3 numbers
 const ccvNumValidator = () => {
     const numbers = /^[0-9]+$/g;
     let value = cvvField.value;
+    const cvvError = document.getElementById('error-cvv');
 
     if(value.match(numbers) || value === ''){
         if(value.length === 3){
-            cvvField.style.borderColor = 'rgb(111, 157, 220)'
+            cvvField.style.borderColor = 'rgb(111, 157, 220)';
+            cvvError.innerHTML = '';
             return true;
         } else {
             cvvField.style.borderColor = 'rgb(255, 0, 0)';
+            cvvError.innerHTML = 'Please enter a 3 digit CVV';
             return false;
         }
     } else {
@@ -212,7 +253,9 @@ const ccvNumValidator = () => {
     }
 }
 cvvField.addEventListener('keyup', ccvNumValidator);
+cvvField.addEventListener('blur', ccvNumValidator);
 
+//This event checks if the fields have valid inputs before submitting
 form.addEventListener('submit', (e) => {
     if(!nameValidator()) {
         e.preventDefault();
@@ -223,14 +266,16 @@ form.addEventListener('submit', (e) => {
     if(!activitiesValidator()) {
         e.preventDefault();
     }
-    if(!creditCardNumValidator()) {
-        e.preventDefault();
-    }
-    if(!zipNumValidator()) {
-        e.preventDefault();
-    }
-    if(!ccvNumValidator()) {
-        e.preventDefault();
+    if(paymentSelector.children[1].selected === true){
+        if(!creditCardNumValidator()) {
+            e.preventDefault();
+        }
+        if(!zipNumValidator()) {
+            e.preventDefault();
+        }
+        if(!ccvNumValidator()) {
+            e.preventDefault();
+        }
     }
 });
 
