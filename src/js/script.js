@@ -16,6 +16,9 @@ const activityCheckboxes = document.querySelectorAll('.activities input');
 const total = document.querySelector('[data-total]');
 const paymentSelector = document.getElementById('payment');
 const creditCardDiv = document.getElementById('credit-card');
+const creditCardField = document.getElementById('cc-num');
+const zipField = document.getElementById('zip');
+const cvvField = document.getElementById('cvv');
 const paypalDiv = document.getElementById('paypal');
 const bitcoinDiv = document.getElementById('bitcoin');
 const submitButton = document.querySelector('[type=submit]');;
@@ -32,7 +35,6 @@ const nameValidator = () => {
         return false;
     }
 }
-nameTextBox.addEventListener('blur', nameValidator);
 nameTextBox.addEventListener('keyup', nameValidator);
 
 //This function validates if email has characters before and after the '@' symbol.  Learned from FSJS Form Input Validation Warm up
@@ -50,7 +52,6 @@ const emailValidator = () => {
         return false;
     } 
 }
-emailTextBox.addEventListener('blur', emailValidator);
 emailTextBox.addEventListener('keyup', emailValidator);
 
 //This event listener shows or hides the other title textbox if 'other' is selected in the dropdown
@@ -155,6 +156,63 @@ paymentSelector.addEventListener('change', (e) => {
     }
 });
 
+//This function validates if credit card field has between 13 and 16 numbers
+const creditCardNumValidator = () => {
+    const numbers = /^[0-9]+$/g;
+    let value = creditCardField.value;
+
+    if(value.match(numbers) || value === ''){
+        if(value.length >= 13 && value.length <= 16){
+            creditCardField.style.borderColor = 'rgb(111, 157, 220)'
+            return true;
+        } else {
+            creditCardField.style.borderColor = 'rgb(255, 0, 0)';
+            return false;
+        }
+    } else {
+        creditCardField.value = value.slice(0, -1);
+    }
+}
+creditCardField.addEventListener('keyup', creditCardNumValidator);
+
+//This function validates if zipcode field has 5 numbers
+const zipNumValidator = () => {
+    const numbers = /^[0-9]+$/g;
+    let value = zipField.value;
+
+    if(value.match(numbers) || value === ''){
+        if(value.length === 5){
+            zipField.style.borderColor = 'rgb(111, 157, 220)'
+            return true;
+        } else {
+            zipField.style.borderColor = 'rgb(255, 0, 0)';
+            return false;
+        }
+    } else {
+        zipField.value = value.slice(0, -1);
+    }
+}
+zipField.addEventListener('keyup', zipNumValidator);
+
+//This function validates if cvv field has 3 numbers
+const ccvNumValidator = () => {
+    const numbers = /^[0-9]+$/g;
+    let value = cvvField.value;
+
+    if(value.match(numbers) || value === ''){
+        if(value.length === 3){
+            cvvField.style.borderColor = 'rgb(111, 157, 220)'
+            return true;
+        } else {
+            cvvField.style.borderColor = 'rgb(255, 0, 0)';
+            return false;
+        }
+    } else {
+        cvvField.value = value.slice(0, -1);
+    }
+}
+cvvField.addEventListener('keyup', ccvNumValidator);
+
 form.addEventListener('submit', (e) => {
     if(!nameValidator()) {
         e.preventDefault();
@@ -163,6 +221,15 @@ form.addEventListener('submit', (e) => {
         e.preventDefault();
     }
     if(!activitiesValidator()) {
+        e.preventDefault();
+    }
+    if(!creditCardNumValidator()) {
+        e.preventDefault();
+    }
+    if(!zipNumValidator()) {
+        e.preventDefault();
+    }
+    if(!ccvNumValidator()) {
         e.preventDefault();
     }
 });
