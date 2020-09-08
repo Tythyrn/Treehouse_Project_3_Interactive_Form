@@ -45,13 +45,13 @@ nameTextBox.addEventListener('keyup', nameValidator);
 const emailValidator = () => {
 
     const emailValue = emailTextBox.value;
+    const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
     const atIndex = emailValue.indexOf('@');
-    console.log(atIndex);
     const periodIndex = emailValue.lastIndexOf('.');
     const emailError = document.getElementById('error-email');
 
     //Updates error message depending on what is currently entered into the email field
-    if (atIndex > 1 && periodIndex > (atIndex + 1)){
+    if (emailValue.match(emailRegex)){
         emailTextBox.style.borderColor = 'rgb(111, 157, 220)';
         emailError.innerHTML = '';
         return true;
@@ -59,17 +59,9 @@ const emailValidator = () => {
         emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
         emailError.innerHTML = "Email must contain '@'";
         return false;
-    }else if (atIndex <= 1){
-        emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
-        emailError.innerHTML = "Must enter more characters before '@'";
-        return false;
     } else if (periodIndex === -1){
         emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
         emailError.innerHTML = "Email must contain '.'";
-        return false;
-    }else if (atIndex > 1 && periodIndex <= (atIndex + 1)){
-        emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
-        emailError.innerHTML = "Must enter more characters before '.'";
         return false;
     } else {
         emailTextBox.style.borderColor = 'rgb(255, 0, 0)';
